@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OKLCH Playground</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="https://unpkg.com/culori@3.1.0/bundled/culori.min.js"></script>
+  <script src="./js/helpers.js"></script>
+  <script src="./js/controls_registry.js"></script>
+  <script src="./js/colors_controller.js"></script>
+  <script src="./js/custom_slider.js"></script>
+  <script src="./js/keep-p3.js"></script>
+</head>
+<body>
+  <template id="tmpl-custom-slider">
+    <style>
+      .param {
+        display: inline-block;
+        width: 16px;
+      }
+      #value {
+        display: inline-block;
+        width: 60px;
+      }
+    </style>
+    <div class="custom-slider">
+      <label class="param"><slot></slot></label>
+      <input type="range" min="0" max="0" value="0" id="slider">
+      <span id="value"></span>
+    </div>
+  </template>
+
+  <template id="tmpl-keep-p3">
+    <style>
+      .buttons {
+        margin-top: 8px;
+      }
+    </style>
+    <div class="keep-p3">
+      <label><slot name="checkbox-label"></slot> <input type="checkbox" id="checkbox"></label>
+      <div class="buttons">
+        <button type="button" id="button-mapping"><slot name="button-mapping-label"></slot></button>
+      </div>
+    </div>
+  </template>
+
+  <div class="layout">
+    <div class="playground">
+      <div class="controls">
+        <div class="control-group">
+          <keep-p3>
+            <span slot="checkbox-label">Держаться в пределах P3</span>
+            <span slot="button-mapping-label">Сбросить в P3</span>
+          </keep-p3>
+        </div>
+        <div class="control-group">
+          <custom-slider type="range" min="0" max="1" step="0.01" model="oklch" param="l">L</custom-slider>
+          <custom-slider type="range" min="0" max="0.4" step="0.01" model="oklch" param="c">C</custom-slider>
+          <custom-slider type="range" min="0" max="360" step="1" model="oklch" param="h">H</custom-slider>
+        </div>
+
+        <div class="control-group">
+          <custom-slider type="range" min="0" max="360" step="1" model="hsl" param="h">H</custom-slider>
+          <custom-slider type="range" min="0" max="1" step="0.01" model="hsl" param="s">S</custom-slider>
+          <custom-slider type="range" min="0" max="1" step="0.01" model="hsl" param="l">L</custom-slider>
+        </div>
+
+        <div class="control-group">
+          <custom-slider type="range" min="0" max="1" step="0.01" model="rgb" param="r">R</custom-slider>
+          <custom-slider type="range" min="0" max="1" step="0.01" model="rgb" param="g">G</custom-slider>
+          <custom-slider type="range" min="0" max="1" step="0.01" model="rgb" param="b">B</custom-slider>
+        </div>
+      </div>
+      <div class="preview">
+        <div class="buttons">
+          <div class="buttons-group">
+            <div class="button dark lighten-more-hsl">+0.2 HS(L)</div>
+            <div class="button dark lighten-more-oklch">OK(L)CH</div>
+            <div class="button dark lighten-hsl">+0.02 HS(L)</div>
+            <div class="button dark lighten-oklch">OK(L)CH</div>
+            <div class="button dark oklch">P3</div>
+            <div class="button dark rgb">sRGB</div>
+            <div class="button dark darken-hsl">-0.02 HS(L)</div>
+            <div class="button dark darken-oklch">OK(L)CH</div>
+            <div class="button dark darken-more-hsl">-0.2 HS(L)</div>
+            <div class="button dark darken-more-oklch">OK(L)CH</div>
+          </div>
+          <div class="buttons-group">
+            <div class="button light lighten-more-hsl">+0.2 HS(L)</div>
+            <div class="button light lighten-more-oklch">OK(L)CH</div>
+            <div class="button light lighten-hsl">+0.02 HS(L)</div>
+            <div class="button light lighten-oklch">OK(L)CH</div>
+            <div class="button light oklch">P3</div>
+            <div class="button light rgb">sRGB</div>
+            <div class="button light darken-hsl">-0.02 HS(L)</div>
+            <div class="button light darken-oklch">OK(L)CH</div>
+            <div class="button light darken-more-hsl">-0.2 HS(L)</div>
+            <div class="button light darken-more-oklch">OK(L)CH</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notes">
+      <section>
+        <h4>RGB</h4>
+        <p>RGB — техническая цветовая модель. Она не имеет отношения к человеческому пониманию цвета и описывает то, как дисплеи работают с цветом. Каждый параметр — это яркость элемента пикселя.</p>
+      </section>
+
+      <section>
+        <h4>HSL</h4>
+        <p>HSL — попытка очеловечить RGB. В этой модели цвет представляется более понятными параметрами: тон, насыщенность и светлота.</p>
+        <p>Проблема HSL в том, что это всё ещё слишком техническая модель. Конвертация HSL <=> RGB происходит по линейным формулам. Если подвигать ползунки преобразования HSL, можно заметить, что значения RGB меняются линейно и максимально предсказуемо — HSL всё ещё работает с тем, как отображаются цвета на дисплее, а не с тем, как видит их человек.</p>
+        <p>Чтобы наглядно увидеть суть проблемы, можно взять предложенный по умолчанию цвет (RGB: 0, 0.5, 1) и начать менять значение H в HSL. При H = 240 получается тёмно-синий цвет, на котором чёрные буквы почти не видны. При H=60 уже белые буквы становится плохо видно.</p>
+        <p>Причин такой разницы как минимум две. Во-первых, человеческий глаз имеет разную чувствительность к разным цветам. Во-вторых, отличается и суммарное значение света, выделяемого одним пикселем. При H равных 0, 120, 240 «светится» только один канал, а при H равном 60, 180, 300 — в два раза больше.</p>
+        <p>Таким образом, используя HSL, невозможно предсказуемо модифицировать цветовую схему. Нельзя математически проверить допустимость цвета в конкретном месте (в качестве фона под белым текстом, например). Нельзя перекрасить цветовую схему из синей в зелёную путём изменения Hue. В таком случае вместо приятного глазу тёмного синего цвета может вылезти кислотный и слишком светлый зелёный.</p>
+        <p>Затруднительным с HSL может оказаться и подбор универсальных модификаторов для генерации дополнительных цветов на основе базовых.</p>
+        <p>Проблемы можно заметить и при изменении насыщенности. Если взять (RGB: 1, 1, 0) и начать уменьшать в нём S (из HSL), то светло жёлтый станет довольно тёмным серым.</p>
+      </section>
+
+      <section>
+        <h4>OKLCH</h4>
+        <p>Для решения проблем HSL можно использовать OKLCH. Это относительно новая цветовая модель, оперирующая похожими на HSL параметрами: яркость, насыщенность и оттенок. Сначала появилась модель LCH, а OKLCH — это она же, но с доработками.</p>
+        <p>Необязательно использовать OKLCH как основную рабочую модель — можно брать её в качестве промежуточной. Например, храним и показываем цвета в RGB, но перед трансформациями конвертируем в OKLCH, меняем цвет как хотим, конвертируем обратно, в браузере рисуем RGB.</p>
+        <p>OKLCH похож на очеловеченный OKLAB. Основное отличие OKLCH от HSL заключается в том, что параметры цвета ориентированы не на принципы работы дисплеев, а на восприятие цветов человеком.</p>
+        <p>Изменяя цвет фона или текста в OKLCH, можно иметь гораздо больше уверенности в том, что пока мы не трогаем параметр L, контрастность никуда не денется. Можно перекрасить синюю кнопку в зелёный и не бояться, что текст на ней перестанет читаться или от одного взгляда на неё начнут вытекать глаза.</p>
+        <p>OKLCH даёт и более предсказуемые относительные манипуляции с цветом. Например, изменением L на пару процентных пунктов для фона кнопки можно получить фон для кнопки при наведении. И это изменение имеет более стабильные результаты, чем аналогичная манипуляция с цветом в HSL. Особенно сильно это проявляется на более значительных изменениях яркости.</p>
+        <p>У OKLCH в качестве промежуточной модели есть один минус, о котором всегда следует помнить. OKLCH кодирует огромное цветовое пространство. Значительную часть цветов, которые позволяет описать OKLCH, невозможно отобразить на экране и записать в других цветовых моделях. Поэтому конвертация происходит с потерями.</p>
+        <p>Например, если взять насыщенный и умеренно яркий цвет в RGB, перевести его в OKLCH, значительно увеличить L, вернуть L обратно и сконвертировать обратно в RGB, на выходе будет исходный цвет.</p>
+        <p>Но если взять тот же исходный цвет, сконвертировать в OKLCH, увеличить яркость, сконвертировать в RGB, снова сконвертировать в OKLCH, вернуть яркость и сконвертировать обратно, то может потеряться насыщенность.</p>
+        <p>Стоит либо избегать лишних конвертаций, либо лишний раз не использовать для модификации уже модифицированные цвета. Если пишем формулы — то пишем их от базового цвета, информации в котором достаточно.</p>
+        <p>И в целом из-за работы со слишком широким цветовым диапазоном OKLCH имеет тенденцию давать довольно серые цвета при уменьшении яркости у слишком светлых цветов. Увидеть это можно на «-0.2 OK(L)CH», если выкрутить L у дефолтного синего до 0.9. Иногда в таких ситуациях может показаться, что HSL работает лучше.</p>
+        <p>Но в общем случае HSL с этим справляется ещё хуже и способен выдавать цвета с совершенно непредсказуемыми характеристиками. Для демонстрации можно взять цвет (HSL: 0, 1, 0.8), подвигать параметр H и понаблюдать, как меняется «-0.2 HS(L)». При этом «-0.2 OK(L)CH» себя показывает достаточно стабильно даже несмотря на значительные изменения цвета, от которого происходит расчёт (если крутить H от HSL).</p>
+      </section>
+
+      <section>
+        <h4>P3</h4>
+        <p>В качестве внезапного бонуса OKLCH даёт доступ к расширенному цветовому пространству. Пока это работает не на всех дисплеях, но попробовать можно.</p>
+        <p>Выкручиваем стандартный максимально красный цвет (RGB: 1, 0, 0). После чего в OKLCH задвигаем C (Chroma) до максимума. Если монитор поддерживает P3, то можно заметить, что максимально красный в P3 заметно краснее и ярче, чем максимально красный в sRGB.</p>
+        <p>Применять такое на практике может быть ещё рано (сложно поддерживать обратную совместимость). Но однажды оно может прийти в каждый дом. Хотя в мобильной разработке уже вполне может использоваться.</p>
+        <p>В форме управления цветом есть чекбокс «Держаться в пределах P3». Он позволяет «прощупать» границы P3, но при подборе цвета его лучше не использовать — при каждом пересчёте цвета происходит потеря информация о предыдущем, и итоговый цвет может сильно «убегать» от исходного по всем параметрам. Для разового приведения цвета в пространство P3 лучше использовать кнопку «Сбросить в P3».</p>
+        <p>Визуализацию OKLCH и P3 можно получше рассмотреть на <a href="https://oklch.com" target="_blank">oklch.com</a>.</p>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

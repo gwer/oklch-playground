@@ -1,0 +1,115 @@
+body {
+  background-color: #eee;
+  font-size: 16px;
+}
+
+.layout {
+  columns: 600px 2;
+  max-width: 1400px;
+}
+
+.playground {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.preview {
+  margin-left: 64px;
+}
+
+.buttons {
+  display: flex;
+}
+
+.buttons-group {
+  display: grid;
+  grid-template:
+    'hsl-lighten-more oklch-lighten-more'
+    'hsl-lighten oklch-lighten'
+    'srgb srgb'
+    'p3 p3'
+    'hsl-darken oklch-darken'
+    'hsl-darken-more oklch-darken-more';
+
+  margin-right: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.control-group {
+  margin-bottom: 16px;
+}
+
+.button {
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 8px;
+}
+
+.button.rgb {
+  background-color: var(--color-rgb);
+  grid-area: srgb;
+}
+
+.button.oklch {
+  background-color: var(--color-oklch);
+  grid-area: p3;
+}
+
+.darken-hsl {
+  background-color: var(--color-hsl-darken);
+  grid-area: hsl-darken;
+}
+.darken-oklch {
+  background-color: var(--color-oklch-darken);
+  grid-area: oklch-darken;
+}
+.lighten-hsl {
+  background-color: var(--color-hsl-lighten);
+  grid-area: hsl-lighten;
+}
+.lighten-oklch {
+  background-color: var(--color-oklch-lighten);
+  grid-area: oklch-lighten;
+}
+
+.darken-more-hsl {
+  background-color: var(--color-hsl-darken-more);
+  grid-area: hsl-darken-more;
+}
+.darken-more-oklch {
+  background-color: var(--color-oklch-darken-more);
+  grid-area: oklch-darken-more;
+}
+.lighten-more-hsl {
+  background-color: var(--color-hsl-lighten-more);
+  grid-area: hsl-lighten-more;
+}
+.lighten-more-oklch {
+  background-color: var(--color-oklch-lighten-more);
+  grid-area: oklch-lighten-more;
+}
+
+.button.dark {
+  color: white;
+}
+
+.button.light {
+  color: black;
+}
+
+.notes section {
+  break-inside: avoid;
+}
+
+.notes h4 {
+  break-after: avoid;
+  margin-bottom: 0;
+}
+
+.notes p {
+  break-inside: avoid;
+  margin: 0.75rem 0;
+}
